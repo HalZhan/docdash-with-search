@@ -1,132 +1,105 @@
-/*************** SEARCH - AUTOCOMPLETE ***************/
-var $searchContainer = $('#search-container');
-var $searchInput = $searchContainer.find('input');
-var $searchedList = $searchContainer.find('ul');
-var $anchorList = $('nav ul li a');
-var $selected = $();
+(function (global) {
+    /*************** SEARCH - AUTOCOMPLETE ***************/
+    var $searchContainer = $('#search-container');
+    var $searchInput = $searchContainer.find('input');
 
-var KEY_CODE_UP = 38;
-var KEY_CODE_DOWN = 40;
-var KEY_CODE_ENTER = 13;
+    var KEY_CODE_ENTER = 13;
 
-$(window).on('click', function (event) {
-    if (!$searchContainer[0].contains(event.target)) {
-        clear();
-    }
-});
+    var searchUrl = '/__search.json',
+        curSuggestion = null,
+        searchJson = null;
 
-$searchedList.on('click', 'li', function (event) {
-    var currentTarget = event.currentTarget;
-    var url = $(currentTarget).find('a').attr('href');
-
-    moveToPage(url);
-});
-
-$searchInput.on({
-    keyup: onKeyupSearchInput,
-    keydown: onKeydownInput
-});
-
-function onKeyupSearchInput(event) {
-    var inputText = removeWhiteSpace($searchInput.val()).toLowerCase();
-
-    if (event.keyCode === KEY_CODE_UP || event.keyCode === KEY_CODE_DOWN) {
-        return;
+    /**
+     * Jump to the href.
+     * @param {String} href The url you will jump to.
+     */
+    function jumpByHref(href) {
+        if(href) {
+            location.href = href;
+            $searchInput.typeahead('val', '');
+            curSuggestion = null;
+        }
     }
 
-    if (!inputText) {
-        $searchedList.html('');
-        return;
-    }
-
-    if (event.keyCode === KEY_CODE_ENTER) {
-        onKeyupEnter();
-        return;
-    }
-
-    setList(inputText);
-}
-
-function onKeydownInput(event) {
-    $selected.removeClass('highlight');
-
-    switch (event.keyCode) {
-        case KEY_CODE_UP:
-            $selected = $selected.prev();
-            if (!$selected.length) {
-                $selected = $searchedList.find('li').last();
+    /**
+     * Initialize searcher.
+     * @param {Array} dataList Raw data list.
+     */
+    function initSearcher(dataList) {
+        var names = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: dataList,
+            identify: function (obj) {
+                return obj.path;
             }
-            break;
-        case KEY_CODE_DOWN:
-            $selected = $selected.next();
-            if (!$selected.length) {
-                $selected = $searchedList.find('li').first();
+        }),
+            comments = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('comment'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                local: dataList,
+                identify: function (obj) {
+                    return obj.path;
+                }
+            });
+        $searchContainer.on('click', '.tt-suggestion', function(e) {
+            var $this = $(this),
+                href = $this.find('a').prop('href') || '';
+            if(href) {
+                jumpByHref(href);
             }
-            break;
-        default: break;
+        });
+        $searchInput.bind('typeahead:select', function(e, suggestion) {
+            // console.log('Selection: ' + suggestion);
+            curSuggestion = suggestion;
+        });
+        $searchInput.bind('typeahead:autocomplete', function(e, suggestion) {
+            // console.log('Selection: ' + suggestion);
+            curSuggestion = suggestion;
+        });
+        $searchInput.bind('typeahead:render', function(e, suggestion) {
+            // console.log('Selection: ' + suggestion);
+            curSuggestion = suggestion;
+        });
+        $searchInput.on({
+            keyup: function(event) {
+                if (event.keyCode === KEY_CODE_ENTER) {
+                    if($searchInput.typeahead('val') && curSuggestion) {
+                        jumpByHref(curSuggestion.path);
+                    }
+                    return;
+                }
+            }
+        });
+        $searchInput.typeahead({
+            highlight: true,
+            classNames: {
+            }
+        }, {
+                name: 'name',
+                display: 'name',
+                source: names,
+                templates: {
+                    header: '<h3 class="league-name">API Name</h3>',
+                    suggestion: Handlebars.compile('<li><a href="{{path}}">{{name}}<li>')
+                },
+            }, {
+                name: 'comment',
+                display: 'comment',
+                source: comments,
+                templates: {
+                    header: '<h3 class="league-name">API Comment</h3>',
+                    suggestion: Handlebars.compile('<li><a href="{{path}}">{{comment}}<li>')
+                }
+            });
     }
 
-    $selected.addClass('highlight');
-}
-
-function onKeyupEnter() {
-    if (!$selected.length) {
-        $selected = $searchedList.find('li').first();
+    function init() {
+        $.get(searchUrl, function (res) {
+            searchJson = res;
+            // nedb = generateDB(res);
+            initSearcher(searchJson);
+        });
     }
-    moveToPage($selected.find('a').attr('href'));
-}
-
-function moveToPage(url) {
-    if (url) {
-        window.location = url;
-    }
-    clear();
-}
-
-function clear() {
-    $searchedList.html('');
-    $searchInput.val('');
-    $selected = $();
-}
-
-function setList(inputText) {
-    var html = '';
-
-    $anchorList.filter(function (idx, item) {
-        return isMatched(item.text, inputText);
-    }).each(function (idx, item) {
-        html += makeListItemHtml(item, inputText);
-    });
-    $searchedList.html(html);
-}
-
-function isMatched(itemText, inputText) {
-    return removeWhiteSpace(itemText).toLowerCase().indexOf(inputText) > - 1;
-}
-
-function makeListItemHtml(item, inputText) {
-    var itemText = item.text;
-    var itemHref = item.href;
-    var $parent = $(item).closest('div');
-    var memberof = '';
-
-    if ($parent.length && $parent.attr('id')) {
-        memberof = $parent.attr('id').replace('_sub', '');
-    } else {
-        memberof = $(item).closest('div').find('h3').text();
-    }
-
-    if (memberof) {
-        memberof = '<span class="group">' + memberof + '</span>';
-    }
-
-    itemText = itemText.replace(new RegExp(inputText, 'ig'), function (matched) {
-        return '<strong>' + matched + '</strong>';
-    });
-
-    return '<li><a href="' + itemHref + '">' + itemText + '</a>' + memberof + '</li>';
-}
-
-function removeWhiteSpace(value) {
-    return value.replace(/\s/g, '');
-}
+    init();
+})(typeof self != 'undefined' ? self : global);
