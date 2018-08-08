@@ -5,7 +5,7 @@
 
     var KEY_CODE_ENTER = 13;
 
-    var searchUrl = '/__search.json',
+    var searchUrl = './search.json',
         curSuggestion = null,
         searchJson = null;
 
