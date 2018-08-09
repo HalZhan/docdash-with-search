@@ -362,7 +362,22 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>signals:{     opened: null,     twisted: { memorize:true },     applied: { memorize: false, params:[one, two] } } // Setting the context initially can be a hassle, so this also supports a function that returns a hash signals: function(){     return {     opened: null,     twisted: { memorize:true },     applied: { memorize: false, params:[one, two] },     reversed: {context: someOtherRuntimeObject}     }; }</code></pre>
+    <pre class="prettyprint"><code>signals:{
+     opened: null,
+     twisted: { memorize:true },
+     applied: { memorize: false, params:[one, two] }
+ }
+
+ // Setting the context initially can be a hassle, so this also supports a function that returns a hash
+
+ signals: function(){
+     return {
+     opened: null,
+     twisted: { memorize:true },
+     applied: { memorize: false, params:[one, two] },
+     reversed: {context: someOtherRuntimeObject}
+     };
+ }</code></pre>
 
 
 

@@ -232,7 +232,9 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>var probe = require("documents/probe");probe.update( obj, {'name.last' : 'Owen', 'name.first' : 'LeRoy'},{$dec : {'password.changes' : 2}} );</code></pre>
+    <pre class="prettyprint"><code>var probe = require("documents/probe");
+probe.update( obj, {'name.last' : 'Owen', 'name.first' : 'LeRoy'},
+{$dec : {'password.changes' : 2}} );</code></pre>
 
 
 
@@ -300,7 +302,9 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>var probe = require("documents/probe");probe.update( obj, {'name.last' : 'Owen', 'name.first' : 'LeRoy'},{$inc : {'password.changes' : 2}} );</code></pre>
+    <pre class="prettyprint"><code>var probe = require("documents/probe");
+probe.update( obj, {'name.last' : 'Owen', 'name.first' : 'LeRoy'},
+{$inc : {'password.changes' : 2}} );</code></pre>
 
 
 
@@ -368,7 +372,9 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>var probe = require("documents/probe");// attr is the name of the array fieldprobe.update( data, {_id : '511d18827da2b88b09000133'}, {$pop : {attr : 1}} );</code></pre>
+    <pre class="prettyprint"><code>var probe = require("documents/probe");
+// attr is the name of the array field
+probe.update( data, {_id : '511d18827da2b88b09000133'}, {$pop : {attr : 1}} );</code></pre>
 
 
 
@@ -436,7 +442,10 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>var probe = require("documents/probe");// attr is the name of the array fieldprobe.update( data, {'email' : 'EWallace.43@fauxprisons.com'},{$pull : {attr : {"color" : "green"}}} );</code></pre>
+    <pre class="prettyprint"><code>var probe = require("documents/probe");
+// attr is the name of the array field
+probe.update( data, {'email' : 'EWallace.43@fauxprisons.com'},
+{$pull : {attr : {"color" : "green"}}} );</code></pre>
 
 
 
@@ -504,7 +513,10 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>var probe = require("documents/probe");// attr is the name of the array fieldprobe.update( data, {_id : '511d18827da2b88b09000133'},{$push : {attr : {"hand" : "new", "color" : "new"}}} );</code></pre>
+    <pre class="prettyprint"><code>var probe = require("documents/probe");
+// attr is the name of the array field
+probe.update( data, {_id : '511d18827da2b88b09000133'},
+{$push : {attr : {"hand" : "new", "color" : "new"}}} );</code></pre>
 
 
 
@@ -572,7 +584,8 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>var probe = require("documents/probe");probe.update( data, {'name.first' : 'Yogi'}, {$unset : {'name.first' : ''}} );</code></pre>
+    <pre class="prettyprint"><code>var probe = require("documents/probe");
+probe.update( data, {'name.first' : 'Yogi'}, {$unset : {'name.first' : ''}} );</code></pre>
 
 
 

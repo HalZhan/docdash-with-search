@@ -39,7 +39,6 @@
     padding-left: 8px;
     color: white;
 }
-.search-container ul li, 
 .search-container .tt-menu .tt-suggestion {
     text-align: left;
     width: 100%;
@@ -54,30 +53,18 @@
     color: #CCC;
 }
 .search-container .tt-menu .tt-suggestion:hover,
-.search-container ul li:hover,
-.search-container .tt-menu .tt-suggestion.tt-highlight,
-.search-container ul li.highlight{
+.search-container .tt-menu .tt-suggestion.tt-cursor,
+.search-container .tt-menu .tt-suggestion.tt-highlight{
     background-color: #fff;
 }
 .search-container .tt-menu .tt-suggestion:hover a,
-.search-container ul li:hover a,
-.search-container .tt-menu .tt-suggestion:hover a.tt-highlight,
-.search-container ul li.highlight a {
+.search-container .tt-menu .tt-suggestion.tt-cursor a,
+.search-container .tt-menu .tt-suggestion:hover a.tt-highlight{
     color: #1f292e;
     text-decoration: underline;
 }
-.search-container ul li:hover strong,
+.search-container .tt-menu .tt-suggestion.tt-cursor strong,
 .search-container .tt-menu .tt-suggestion:hover strong,
-.search-container ul li.highlight strong,
 .search-container .tt-menu .tt-suggestion.tt-highlight strong {
     color: #ff4141;
-}
-.search-container ul li .group {
-    font-size: 11px;
-    color: #ccc;
-    margin-left: 10px;
-}
-.search-container ul li:hover .group,
-.search-container ul li.highlight .group {
-    color: #777;
 }

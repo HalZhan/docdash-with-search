@@ -2220,7 +2220,16 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>// This supports these signatures:instance.validate(record, schemaName, options);instance.validate(); // this, this._defaultSchemaName, this.validationOptionsinstance.validate(record); // record, this._defaultSchemaName, this.validationOptionsinstance.validate(schemaName); //this, schemaName, this.validationOptionsinstance.validate(record, schemaName); //record, schemaName, this.validationOptionsinstance.validate(schemaName, options); //this, schemaName, this.validationOptions</code></pre>
+    <pre class="prettyprint"><code>// This supports these signatures:
+
+instance.validate(record, schemaName, options);
+
+
+instance.validate(); // this, this._defaultSchemaName, this.validationOptions
+instance.validate(record); // record, this._defaultSchemaName, this.validationOptions
+instance.validate(schemaName); //this, schemaName, this.validationOptions
+instance.validate(record, schemaName); //record, schemaName, this.validationOptions
+instance.validate(schemaName, options); //this, schemaName, this.validationOptions</code></pre>
 
 
 
